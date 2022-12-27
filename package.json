@@ -1,0 +1,33 @@
+{
+  "name": "mongoose-express",
+  "version": "1.0.0",
+  "description": "- mongoose - express - dotenv - morgan - cors",
+  "main": "server.js",
+  "type": "module",
+  "scripts": {
+    "start": "nodemon server.js"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/ldg77/mongoose-express.git"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/ldg77/mongoose-express/issues"
+  },
+  "homepage": "https://github.com/ldg77/mongoose-express#readme",
+  "dependencies": {
+    "bcrypt": "^5.1.0",
+    "cors": "^2.8.5",
+    "dotenv": "^16.0.3",
+    "express": "^4.18.2",
+    "mongoose": "^6.7.3",
+    "morgan": "^1.10.0",
+    "socket.io": "^4.5.4"
+  },
+  "devDependencies": {
+    "nodemon": "^2.0.20"
+  }
+}
