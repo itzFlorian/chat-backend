@@ -6,10 +6,15 @@ import {
   postOne,
   updateOne,
 } from "../controller/userController.js";
+import { validateRequest, userValidator } from "../validation/validator.js";
 // set userRouter
 const userRouter = express.Router();
+
 // set routes in root
-userRouter.route("/").get(getAll).post(postOne);
+userRouter
+  .route("/")
+    .get(getAll)
+    .post(userValidator, validateRequest, postOne);
 // set routes on param
 userRouter.route("/:id").get(getOne).put(updateOne).delete(deleteOne);
 

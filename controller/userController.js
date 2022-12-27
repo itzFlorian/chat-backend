@@ -19,7 +19,16 @@ export const getOne = async (req, res) => {
 };
 export const postOne = async (req, res) => {
   try {
-    const hashedPw = await bcrypt.hash(req.body.password, 10)
+    const {username, password, email} = req.body
+    const usernameCheck = await User.findOne({username})
+    if(usernameCheck){
+      return res.json({message:"Username already in use", status:false})
+    }
+    const emailCheck = await User.findOne({email}) 
+    if(emailCheck){
+      return res.json({message:"email is already in use", status:false})
+    }
+    const hashedPw = await bcrypt.hash(password, 10)
     req.body.password = hashedPw
     res.status(201).send(await User.create(req.body));
   } catch (error) {
