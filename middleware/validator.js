@@ -34,4 +34,15 @@ const userValidator = [
   // .withMessage("Password is not strong enough. You need 1 uppercase-char, 1 lowercase-char, 1 number-char, 1 symbol-char")
 ]
 
-export {validateRequest ,userValidator}
+const loginValidator = [
+  body("username")
+    .notEmpty()
+    .withMessage("username is required")
+    .trim(),
+  body("password")
+    .notEmpty()
+    .withMessage("password is required")
+    .trim(),
+]
+
+export {validateRequest ,userValidator, loginValidator}

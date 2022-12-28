@@ -1,24 +1,6 @@
 import User from "../models/User.js";
 import bcrypt from "bcrypt"
-
-
-export const getAll = async (req, res) => {
-  try {
-    res.status(200).send(await User.find());
-  } catch (error) {
-    res.status(404).send({ message: error });
-  }
-};
-
-
-export const getOne = async (req, res) => {
-  try {
-    res.status(200).send(await User.findById(req.params.id));
-  } catch (error) {
-    res.status(404).send({ message: error });
-  }
-};
-
+import jwt from "jsonwebtoken";
 
 export const postOne = async (req, res) => {
   try {
@@ -33,13 +15,53 @@ export const postOne = async (req, res) => {
     }
     const hashedPw = await bcrypt.hash(password, 10)
     req.body.password = hashedPw
-    const newUser = await User.create(req.body)
-    res.status(201).send({message:newUser, status:true});
+    await User.create(req.body)
+    delete req.body.password
+    res.status(201).json({status:true, username, email})  
+  } catch (err) {
+    res.status(404).send({ message: err.message, status:false });
+  }
+};
+
+export const postLogin = async (req, res, next) => {
+  try{
+    const {password, username} = req.body;
+    const user = await User.findOne({username})
+    const isPasswordvalid = await bcrypt.compare
+    (password, user.password )
+    if(!isPasswordvalid){
+      res.status(401).json({message:"incorrect username or password",status:false})
+    }
+    const token = jwt.sign({username, id:user._id}, process.env.JWT_KEY)
+    delete user.password
+    return res.json({status:true, token})
+  }catch(err){
+    res.status(404).json({message:err.message,status:false})
+  }
+
+}
+
+
+
+
+
+
+
+export const getAll = async (req, res) => {
+  try {
+    res.status(200).send(await User.find());
   } catch (error) {
     res.status(404).send({ message: error });
   }
 };
 
+export const getOne = async (req, res) => {
+  try {
+    res.status(200).send(await User.findById(req.params.id));
+  } catch (error) {
+    res.status(404).send({ message: error });
+  }
+};
 
 export const updateOne = async (req, res) => {
   try {
@@ -48,7 +70,6 @@ export const updateOne = async (req, res) => {
     res.status(404).send({ message: error });
   }
 };
-
 
 export const deleteOne = async (req, res) => {
   try {

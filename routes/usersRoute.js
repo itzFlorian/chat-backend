@@ -6,7 +6,7 @@ import {
   postOne,
   updateOne,
 } from "../controller/userController.js";
-import { validateRequest, userValidator } from "../validation/validator.js";
+import { validateRequest, userValidator } from "../middleware/validator.js";
 // set userRouter
 const userRouter = express.Router();
 
