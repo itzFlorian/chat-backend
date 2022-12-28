@@ -19,7 +19,7 @@ app.use(express.json());
 
 // set routes
 app.use("/users", userRouter);
-app.use("/login", loginRouter)
+
 
 // set mongoose
 mongoose.connect(URI, {
