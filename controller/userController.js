@@ -53,6 +53,45 @@ export const patchAvatar = async (req, res, next) => {
   }
 }
 
+export const getOne = async (req, res) => {
+  try {
+    res.status(200).send(await User.findById(req.params.id));
+  } catch (error) {
+    res.status(404).send({ message: error });
+  }
+};
+
+export const findOneByName = async (req,res,next) => {
+  try {
+    const name = req.params.name
+    const existedUser = await User.findOne({username:name})
+    console.log(existedUser);
+    if(existedUser !== null){
+      res.status(200).json({status:true, existedUser})
+    }else{
+      res.status(401).json({status:false, message:"No User found."})
+    }
+  } catch (err) {
+    res.status(404).send({ message: err });itzRAF
+  }
+}
+
+export const addFriendById = async (req, res, next) => {
+  try {
+    const friendId = req.params.id
+    const myID = req.body.id
+    const me = await User.findById(myID).populate("friends")
+
+    const found = me && me.friends.find(friend => friend._id.toString() === friendId.toString())
+    if(!found){
+      await User.findByIdAndUpdate(myID, {$push:{friends:friendId}}, {new:true})
+      return res.status(201).json({message:"Friend added!", status:true })
+    }
+    return res.status(401).json({message:"youre already friends", status:false})
+  } catch (err) {
+    res.status(404).send({ message: err.message });
+  }
+}
 
 
 
@@ -62,14 +101,6 @@ export const patchAvatar = async (req, res, next) => {
 export const getAll = async (req, res) => {
   try {
     res.status(200).send(await User.find());
-  } catch (error) {
-    res.status(404).send({ message: error });
-  }
-};
-
-export const getOne = async (req, res) => {
-  try {
-    res.status(200).send(await User.findById(req.params.id));
   } catch (error) {
     res.status(404).send({ message: error });
   }

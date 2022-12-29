@@ -23,7 +23,13 @@ const userSchema = mongoose.Schema({
   avatarImg:{
     type:"String",
     default:""
-  }
+  },
+  friends:[
+    {  
+      type: mongoose.Types.ObjectId, 
+      ref: "User"  
+    }
+    ]
 });
 
 export default mongoose.model("User", userSchema, "users");
