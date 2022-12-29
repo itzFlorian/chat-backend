@@ -5,7 +5,7 @@ import mongoose from "mongoose";
 import morgan from "morgan";
 import cors from "cors";
 import userRouter from "./routes/usersRoute.js";
-import loginRouter from "./routes/loginRoute.js";
+
 
 const PORT = process.env.PORT || 4000;
 const URI = process.env.URI || "mongodb://localhost:27017/chat-app";

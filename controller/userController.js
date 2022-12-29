@@ -27,18 +27,30 @@ export const postLogin = async (req, res, next) => {
   try{
     const {password, username} = req.body;
     const user = await User.findOne({username})
-    const isPasswordvalid = await bcrypt.compare
-    (password, user.password )
-    if(!isPasswordvalid){
+    const isPasswordvalid = await bcrypt.compare(password, user.password )
+    if(!isPasswordvalid || !user){
       res.status(401).json({message:"incorrect username or password",status:false})
     }
     const token = jwt.sign({username, id:user._id}, process.env.JWT_KEY)
     delete user.password
-    return res.json({status:true, token})
+    return res.json({status:true, token, id:user._id})
   }catch(err){
     res.status(404).json({message:err.message,status:false})
   }
 
+}
+
+export const patchAvatar = async (req, res, next) => {
+  try{
+    const {img, id} = req.body
+    const user = await User.findByIdAndUpdate(id, {
+      isAvatarImgSet:true,
+      avatarImg:img      
+    },{new:true} )
+    res.json({message:"Userimage updated", status:true, user}) 
+  }catch(err){
+    res.status(400).json({message:err.message, status:false})
+  }
 }
 
 
