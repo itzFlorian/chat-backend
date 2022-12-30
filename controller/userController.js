@@ -93,7 +93,16 @@ export const addFriendById = async (req, res, next) => {
   }
 }
 
-
+export const getAllFriends = async (req,res,next) => {
+  try {
+    const myId = req.params.id 
+    const me = await User.findById(myId).populate("friends")
+    const friends = me.friends
+    res.status(200).json({status:true, friends, me})
+  } catch (err) {
+    res.status(400).json({message:err.message})
+  }
+}
 
 
 

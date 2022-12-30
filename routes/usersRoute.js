@@ -5,7 +5,8 @@ import {
   patchAvatar,
   getOne,
   findOneByName,
-  addFriendById
+  addFriendById,
+  getAllFriends
 } from "../controller/userController.js";
 import { validateRequest, userValidator, loginValidator } from "../middleware/validator.js";
 import auth from "../middleware/auth.js";
@@ -33,6 +34,9 @@ userRouter
 userRouter
   .route("/addFriend/:id")
     .patch(addFriendById)
+userRouter  
+  .route("/friends/:id")
+    .get(getAllFriends)
 
 // set routes on param
 // userRouter.route("/:id").get(getOne).put(updateOne).delete(deleteOne);
