@@ -107,6 +107,9 @@ export const getAllFriends = async (req,res,next) => {
 
 
 
+
+
+
 export const getAll = async (req, res) => {
   try {
     res.status(200).send(await User.find());

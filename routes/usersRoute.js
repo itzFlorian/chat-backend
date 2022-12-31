@@ -15,25 +15,34 @@ import checkUser from "../middleware/checkUser.js";
 const userRouter = express.Router();
 
 // set routes in root
+userRouter  
+  .route("/:id")
+  .get(getOne)
 
 userRouter
 .route("/register")
 .post(userValidator, validateRequest, postOne);
+
 userRouter
 .route("/login")
 .post(loginValidator, validateRequest, postLogin)
+
 userRouter
 .route("/setAvatar")
 .patch(auth, patchAvatar)
 userRouter
+
   .route("/search/:name")
     .get(auth, findOneByName)
+
 userRouter
   .route("/check/:id")
     .get(auth, getOne)
+
 userRouter
   .route("/addFriend/:id")
     .patch(addFriendById)
+
 userRouter  
   .route("/friends/:id")
     .get(getAllFriends)
