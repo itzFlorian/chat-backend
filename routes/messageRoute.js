@@ -9,5 +9,5 @@ messagesRouter
     .post(addMessage)
 messagesRouter
   .route("/getmsg")
-    .get(getAllMessages)
+    .post(getAllMessages)
 export default messagesRouter
