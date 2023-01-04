@@ -5,7 +5,7 @@ import mongoose from "mongoose";
 import morgan from "morgan";
 import cors from "cors";
 import userRouter from "./routes/usersRoute.js";
-
+import messagesRouter from "./routes/messageRoute.js";
 
 const PORT = process.env.PORT || 4000;
 const URI = process.env.URI || "mongodb://localhost:27017/chat-app";
@@ -19,6 +19,7 @@ app.use(express.json());
 
 // set routes
 app.use("/users", userRouter);
+app.use("/messages", messagesRouter);
 
 
 // set mongoose
