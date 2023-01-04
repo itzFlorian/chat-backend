@@ -80,7 +80,6 @@ export const addFriendById = async (req, res, next) => {
     const friendId = req.params.id
     const myID = req.body.id
     const me = await User.findById(myID).populate("friends")
-
     const found = me && me.friends.find(friend => friend._id.toString() === friendId.toString())
     if(!found){
       await User.findByIdAndUpdate(myID, {$push:{friends:friendId}}, {new:true})

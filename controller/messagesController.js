@@ -9,7 +9,6 @@ const addMessage = async (req, res, next) => {
       sender:from
     });
     if(data){
-      console.log("ok");
       return res.json({message:"msg added successfully"})
     }
     return res.josn({message:"msg failed to add"})
@@ -28,7 +27,6 @@ const getAllMessages = async (req, res, next) => {
       }
     })
     .sort({ updatedAt: 1 })
-    console.log(messages);
     const projectMessages = messages.map((msg) => {
       return {
         fromSelf: msg.sender.toString() === from,
