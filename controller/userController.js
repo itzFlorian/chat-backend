@@ -27,15 +27,14 @@ export const postLogin = async (req, res, next) => {
   try{
     const {password, username} = req.body;
     const user = await User.findOne({username})
-    const isPasswordvalid = await bcrypt.compare(password, user.password )
+    const isPasswordvalid = user && await bcrypt.compare(password, user.password )
     if(!isPasswordvalid || !user){
-      res.status(401).json({message:"incorrect username or password",status:false})
+      return res.status(401).send({message:"incorrect username or password", status:false})
     }
     const token = jwt.sign({username, id:user._id}, process.env.JWT_KEY)
-    delete user.password
-    return res.json({status:true, token, id:user._id})
+    res.json({status:true, token, id:user._id})
   }catch(err){
-    res.status(404).json({message:err.message,status:false})
+    res.status(404).json({message:err.message, status:false})
   }
 
 }
