@@ -75,14 +75,16 @@ export const addFriendById = async (req, res, next) => {
   try {
     const friendId = req.params.id
     const myID = req.body.id
-    const me = await User.findById(myID).populate("friends")
-    const found = me && me.friends.find(friend => friend._id.toString() === friendId.toString())    
-    const you = await User.findById(friendId).populate("friends")
-    const found2 = you && me.friends.find(friend => friend._id.toString() === myID.toString())
-    if(!found && !found2){
-      await User.findByIdAndUpdate(friendId, {$push:{friends:myID}}, {new:true})
-      await User.findByIdAndUpdate(myID, {$push:{friends:friendId}}, {new:true})
-      return res.status(201).json({message:"Friend added!", status:true })
+    if(friendId !== myID){
+      const me = await User.findById(myID).populate("friends")
+      const found = me && me.friends.find(friend => friend._id.toString() === friendId.toString())    
+      const you = await User.findById(friendId).populate("friends")
+      const found2 = you && me.friends.find(friend => friend._id.toString() === myID.toString())
+      if(!found && !found2){
+        await User.findByIdAndUpdate(friendId, {$push:{friends:myID}}, {new:true})
+        await User.findByIdAndUpdate(myID, {$push:{friends:friendId}}, {new:true})
+        return res.status(201).json({message:"Friend added!", status:true })
+      }      
     }
     return res.status(401).json({message:"youre already friends", status:false})
   } catch (err) {
