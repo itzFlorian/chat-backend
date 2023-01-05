@@ -4,20 +4,16 @@ import jwt from "jsonwebtoken";
 
 export const postOne = async (req, res) => {
   try {
-    const {username, password, email} = req.body
+    const {username, password} = req.body
     const usernameCheck = await User.findOne({username})
     if(usernameCheck){
       return res.json({message:"Username already in use", status:false})
-    }
-    const emailCheck = await User.findOne({email}) 
-    if(emailCheck){
-      return res.json({message:"email is already in use", status:false})
-    }
+    }    
     const hashedPw = await bcrypt.hash(password, 10)
     req.body.password = hashedPw
     await User.create(req.body)
     delete req.body.password
-    res.status(201).json({status:true, username, email})  
+    res.status(201).json({status:true, username})  
   } catch (err) {
     res.status(404).send({ message: err.message, status:false });
   }
@@ -80,8 +76,11 @@ export const addFriendById = async (req, res, next) => {
     const friendId = req.params.id
     const myID = req.body.id
     const me = await User.findById(myID).populate("friends")
-    const found = me && me.friends.find(friend => friend._id.toString() === friendId.toString())
-    if(!found){
+    const found = me && me.friends.find(friend => friend._id.toString() === friendId.toString())    
+    const you = await User.findById(friendId).populate("friends")
+    const found2 = you && me.friends.find(friend => friend._id.toString() === myID.toString())
+    if(!found && !found2){
+      await User.findByIdAndUpdate(friendId, {$push:{friends:myID}}, {new:true})
       await User.findByIdAndUpdate(myID, {$push:{friends:friendId}}, {new:true})
       return res.status(201).json({message:"Friend added!", status:true })
     }
@@ -99,6 +98,23 @@ export const getAllFriends = async (req,res,next) => {
     res.status(200).json({status:true, friends, me})
   } catch (err) {
     res.status(400).json({message:err.message})
+  }
+}
+
+export const deleteFriend = async (req, res) => {
+  try {
+    const myID = req.body.me
+    const friend = req.body.friend
+    console.log(friend);
+    const me = await User.findById(myID)
+    const newFriendList = me.friends.filter(friendID => friendID.toString() !== friend )
+    await User.findByIdAndUpdate(myID, {friends:newFriendList})
+    console.log(me.friends);
+    console.log(newFriendList);
+    res.json("alles gut")
+  } catch (err) {
+    res.status(400).json({message:err.message})
+    console.log(err.message);
   }
 }
 

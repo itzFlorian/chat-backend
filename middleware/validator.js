@@ -19,14 +19,6 @@ const userValidator = [
     .isLength({min:2})
     .withMessage("name is to short!"),
 
-  body("email")
-    .notEmpty()
-    .withMessage("email is required!")
-    .isEmail()
-    .withMessage("email is not valid")
-    .normalizeEmail()
-    .trim(),
-
   body("password")
   .notEmpty()
   .trim()

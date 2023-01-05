@@ -6,7 +6,8 @@ import {
   getOne,
   findOneByName,
   addFriendById,
-  getAllFriends
+  getAllFriends,
+  deleteFriend
 } from "../controller/userController.js";
 import { validateRequest, userValidator, loginValidator } from "../middleware/validator.js";
 import auth from "../middleware/auth.js";
@@ -15,10 +16,6 @@ import checkUser from "../middleware/checkUser.js";
 const userRouter = express.Router();
 
 // set routes in root
-userRouter  
-  .route("/:id")
-  .get(getOne)
-
 userRouter
 .route("/register")
 .post(userValidator, validateRequest, postOne);
@@ -28,12 +25,20 @@ userRouter
 .post(loginValidator, validateRequest, postLogin)
 
 userRouter
+.route("/delFriend")
+.patch(auth, deleteFriend)
+
+userRouter
 .route("/setAvatar")
 .patch(auth, patchAvatar)
-userRouter
 
-  .route("/search/:name")
-    .get(auth, findOneByName)
+userRouter  
+.route("/:id")
+.get(getOne)
+
+userRouter
+.route("/search/:name")
+.get(auth, findOneByName)
 
 userRouter
   .route("/check/:id")
