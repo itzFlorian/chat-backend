@@ -21,6 +21,7 @@ const userValidator = [
 
   body("password")
   .notEmpty()
+  .withMessage("password is required")
   .trim()
   // .isStrongPassword()
   // .withMessage("Password is not strong enough. You need 1 uppercase-char, 1 lowercase-char, 1 number-char, 1 symbol-char")
