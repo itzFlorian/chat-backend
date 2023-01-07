@@ -42,7 +42,7 @@ const server = app.listen(PORT, () => {
 const io = new Server(server, {
   cors:{
     origin:"https://chat-frontend-umber.vercel.app",
-    orgin:"http://http://localhost:5173",
+    origin:"http://http://localhost:5173",
     credentials:true
   }
 })
