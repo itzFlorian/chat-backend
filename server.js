@@ -41,7 +41,7 @@ const server = app.listen(PORT, () => {
 // SOCKETS
 const io = new Server(server, {
   cors:{
-    origin:"",
+    origin:"*",
     credentials:true
   }
 })
