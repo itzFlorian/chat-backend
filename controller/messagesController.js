@@ -1,5 +1,5 @@
 import Message from "../models/Message.js";
-
+import bcrypt from "bcrypt"
 const addMessage = async (req, res, next) => {
   try{
     const {from, to , message} = req.body;
@@ -30,7 +30,8 @@ const getAllMessages = async (req, res, next) => {
     const projectMessages = messages.map((msg) => {
       return {
         fromSelf: msg.sender.toString() === from,
-        message: msg.message.text
+        message: msg.message.text,
+        date:msg.createdAdd
       }
     })
     res.json(projectMessages)
