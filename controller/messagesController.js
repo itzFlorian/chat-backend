@@ -31,8 +31,11 @@ const getAllMessages = async (req, res, next) => {
         $all: [from, to],
       }
     })
-    .sort({ updatedAt: 1 })
+    .sort({ updatedAt: "desc" })
+    .limit(10)
+
     // DECRYPTION
+    messages.reverse()
     messages.forEach(msg => {
       const decrypted = cryptr.decrypt(msg.message.text)
       msg.message.text = decrypted       
