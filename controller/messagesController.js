@@ -1,17 +1,22 @@
 import Message from "../models/Message.js";
-import bcrypt from "bcrypt"
+import Cryptr from "cryptr";
+
+const cryptr = new Cryptr("fsdfrewsgdfsg")
+
 const addMessage = async (req, res, next) => {
   try{
-    const {from, to , message} = req.body;
+    const {from, to, message} = req.body;
+    //ENCRYPTION
+    const encryptedMsg = cryptr.encrypt(message)
     const data = await Message.create({
-      message: {text: message},
+      message: {text: encryptedMsg},
       users:[from, to],
       sender:from
     });
     if(data){
       return res.json({message:"msg added successfully"})
     }
-    return res.josn({message:"msg failed to add"})
+    return res.json({message:"msg failed to add"})
   }catch(err){
     console.log(err.message);
     res.json(err.message)
@@ -27,7 +32,12 @@ const getAllMessages = async (req, res, next) => {
       }
     })
     .sort({ updatedAt: 1 })
-    const projectMessages = messages.map((msg) => {
+    // DECRYPTION
+    messages.forEach(msg => {
+      const decrypted = cryptr.decrypt(msg.message.text)
+      msg.message.text = decrypted       
+    })
+    const projectMessages = messages.map((msg) => {      
       return {
         fromSelf: msg.sender.toString() === from,
         message: msg.message.text,
