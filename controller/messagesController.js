@@ -23,7 +23,7 @@ const addMessage = async (req, res, next) => {
   }
 }
 
-const getAllMessages = async (req, res, next) => {
+const getMessages = async (req, res, next) => {
   try {
     const {from, to} = req.body
     const messages = await Message.find({
@@ -36,7 +36,7 @@ const getAllMessages = async (req, res, next) => {
 
     // DECRYPTION
     messages.reverse()
-    messages.forEach(msg => {
+    messages.length > 0 && messages.forEach(msg => {
       const decrypted = cryptr.decrypt(msg.message.text)
       msg.message.text = decrypted       
     })
@@ -50,8 +50,35 @@ const getAllMessages = async (req, res, next) => {
     res.json(projectMessages)
   } catch (err) {
     res.status(400).send(err.message)
-    console.log(err.message);
+  }
+}
+const getAllMessages = async (req, res, next) => {
+  try {
+    const {from, to} = req.body
+    const messages = await Message.find({
+      users: {
+        $all: [from, to],
+      }
+    })
+    .sort({ updatedAt: "desc" })
+
+    // DECRYPTION
+    messages.reverse()
+    messages.length > 0 && messages.forEach(msg => {
+      const decrypted = cryptr.decrypt(msg.message.text)
+      msg.message.text = decrypted       
+    })
+    const projectMessages = messages.map((msg) => {      
+      return {
+        fromSelf: msg.sender.toString() === from,
+        message: msg.message.text,
+        date:msg.createdAdd
+      }
+    })
+    res.json(projectMessages)
+  } catch (err) {
+    res.status(400).send(err.message)
   }
 }
 
-export {addMessage, getAllMessages}
+export {addMessage, getMessages, getAllMessages}

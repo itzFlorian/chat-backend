@@ -107,12 +107,15 @@ export const deleteFriend = async (req, res) => {
   try {
     const myID = req.body.me
     const friend = req.body.friend
-    console.log(friend);
+    
     const me = await User.findById(myID)
     const newFriendList = me.friends.filter(friendID => friendID.toString() !== friend )
     await User.findByIdAndUpdate(myID, {friends:newFriendList})
-    console.log(me.friends);
-    console.log(newFriendList);
+
+    const you = await User.findById(friend)
+    const newFriendList2 = you.friends.filter(friendID => friendID.toString() !== myID )
+    await User.findByIdAndUpdate(friend, {friends:newFriendList2})
+
     res.json("alles gut")
   } catch (err) {
     res.status(400).json({message:err.message})
